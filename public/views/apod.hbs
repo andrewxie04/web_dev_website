@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+
+<html>
+    <h1>
+    Astronomy Picture of the Day from NASA
+    </h1>
+    <ul>
+        <li>Date: {{date}}</li>
+        <li>Title: {{title}}</li>
+        <li>About: {{explanation}}</li>
+    </ul>
+        {{#if hdurl}}
+        <img src={{hdurl}} width="400">
+        {{else}}
+        <iframe src={{url}} width = "800" height = "600">
+        {{/if}}
+
+        <form id="form"> 
+        <input type="date" name="date" id="">
+        <button>new date</button>
+        </form>
+</html>
