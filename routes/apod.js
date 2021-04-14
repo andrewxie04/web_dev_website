@@ -5,7 +5,7 @@ var apod_router = express.Router()
 apod_router.get('/apod', (req, res) => {
     const DATEFORMAT = "yyyy-mm-dd"
     let date = req.query.date;
-    //&date=YYYY-MM-DD
+
     var url = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY';
     
     if(date){
@@ -23,6 +23,9 @@ apod_router.get('/apod', (req, res) => {
         });
     });
  });
+
+
+ 
 
 
 
