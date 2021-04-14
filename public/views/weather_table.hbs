@@ -1,0 +1,32 @@
+<html>
+<h1>
+    Weather Forecast
+</h1>
+<h2>Location : {{lat}}, {{long}}</h2>
+<h2>Today's Date: {{updated}}</h2>
+
+<table style="width:100%" cellpadding="15" border="2">
+    <tr>
+        <th>Time</th>
+        <th>Temperature</th>
+        <th>Wind</th>
+        <th>Sky</th>
+    </tr>
+
+    <th>
+    {{#each forecast}}
+    <tr>
+    <td>{{time}}</td>
+    <td>{{temperature}}</td>
+    <td>{{wind}}</td>
+    <td><img src={{icon}}></img><br>{{shortForecast}}</td>
+    </tr>
+    {{/each}}
+    </th>
+</table>
+
+<h4>
+    <a href="/weather">do another</a>
+</h4>
+
+</html>
