@@ -1,7 +1,9 @@
 <html>
-<h1>
-    Weather Forecast
-</h1>
+
+<h1>Weather Forecast</h1>
+{{#if error}}
+<h2>Looks like an error ocurred, maybe invalid lat/long coordinates.</h2>
+{{else}}
 <h2>Location : {{lat}}, {{long}}</h2>
 <h2>Today's Date: {{updated}}</h2>
 
@@ -14,17 +16,17 @@
     </tr>
 
     <th>
-    {{#each forecast}}
-    <tr>
-    <td>{{time}}</td>
-    <td>{{temperature}}</td>
-    <td>{{wind}}</td>
-    <td><img src={{icon}}></img><br>{{shortForecast}}</td>
-    </tr>
-    {{/each}}
+        {{#each forecast}}
+        <tr>
+            <td>{{time}}</td>
+            <td>{{temperature}}</td>
+            <td>{{wind}}</td>
+            <td><img src={{icon}}></img><br>{{shortForecast}}</td>
+        </tr>
+        {{/each}}
     </th>
 </table>
-
+{{/if}}
 <h4>
     <a href="/weather">do another</a>
 </h4>

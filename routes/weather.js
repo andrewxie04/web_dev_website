@@ -16,75 +16,75 @@ weather_router.get('/weather', (req, res) => {
             'User-Agent': 'request'
         }
     }
+    try {
+        if (lat && long) {
+            url += lat + "," + long
+            https.get(url, options, function (response) {
+                var rawData = '';
+                response.on('data', function (chunk) {
+                    rawData += chunk;
+                });
+                response.on('end', function () {
+                    console.log(rawData);
+                    console.log(url)
+                    var obj = JSON.parse(rawData);
+                    try{
+                    newurl = obj.properties.forecastHourly;
+                    console.log("new url has been set: " + newurl)
+                    
 
-    if (lat && long) {
-        url += lat + "," + long
-        https.get(url, options, function (response) {
-            var rawData = '';
-            response.on('data', function (chunk) {
-                rawData += chunk;
-            });
-            response.on('end', function () {
-                console.log(rawData);
-                console.log(url)
-                var obj = JSON.parse(rawData);
+                    res.locals.city = obj.properties.relativeLocation.properties.city;
+                    res.locals.state = obj.properties.relativeLocation.properties.state;
+                
 
-                newurl = obj.properties.forecastHourly;
-                console.log("new url has been set: " + newurl)
+                    https.get(newurl, options, function (response) {
+                        var rawData = '';
+                        response.on('data', function (chunk) {
+                            rawData += chunk;
+                        });
+                        response.on('end', function () {
+                            console.log(newurl)
+                            var obj = JSON.parse(rawData);
+                            console.log(obj)
+                            //
 
+                            let { updated, periods } = obj.properties
+                            let formattedPeriods = []
+                            periods.forEach((val, i) => {
 
-                res.locals.city = obj.properties.relativeLocation.properties.city;
-                res.locals.state = obj.properties.relativeLocation.properties.state;
+                                let {
+                                    icon,
+                                    startTime,
+                                    temperature,
+                                    temperatureUnit,
+                                    windSpeed,
+                                    windDirection,
+                                    shortForecast
+                                } = val
 
-                https.get(newurl, options, function (response) {
-                    var rawData = '';
-                    response.on('data', function (chunk) {
-                        rawData += chunk;
-                    });
-                    response.on('end', function () {
-                        console.log(newurl)
-                        var obj = JSON.parse(rawData);
-                        console.log(obj)
-                        //
-                       
-                        let { updated, periods } = obj.properties
-                        let formattedPeriods = []
-                        periods.forEach((val, i) => {
-
-                            let {
-                              icon,
-                              startTime,
-                              temperature,
-                              temperatureUnit,
-                              windSpeed,
-                              windDirection,
-                              shortForecast
-                            } = val
-
-                              formattedPeriods.push({
-                                icon,
-                                time: startTime,
-                                temperature: `${temperature} ${temperatureUnit}`,
-                                wind: `${windDirection} at ${windSpeed}`,
-                                shortForecast
-                              })
+                                formattedPeriods.push({
+                                    icon,
+                                    time: startTime,
+                                    temperature: `${temperature} ${temperatureUnit}`,
+                                    wind: `${windDirection} at ${windSpeed}`,
+                                    shortForecast
+                                })
                             })
-                            const table_info = {updated, forecast: formattedPeriods.slice(0, 8), lat, long};
-
-                        //
-
-                        res.render('weather_table', table_info)
+                            const table_info = { updated, forecast: formattedPeriods.slice(0, 8), lat, long };
+                            res.render('weather_table', table_info)
+                        });
                     });
+                }catch(e){res.render('weather_table', {error: true})}
                 });
             });
-        });
-    }
-    else{
-        res.render('weather')
-    }
 
-
+        }
+        else {
+            res.render('weather')
+        }
+    } catch (e) {
+        res.render('weather_table', {error: true})
+    }
 });
-
 
 module.exports = weather_router
